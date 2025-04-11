@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -32,7 +33,7 @@ public class DrawingPanel extends JPanel implements MouseListener, MouseMotionLi
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g.create();
 		for (final DrawingShape shape : document.getShapes()) {
-			g2.draw(shape);
+			shape.draw(g2);
 		}
 	}
 	
@@ -42,18 +43,16 @@ public class DrawingPanel extends JPanel implements MouseListener, MouseMotionLi
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		System.out.println("Mouse down");
 		isDrawing = true;
 		document.handleMouseDown(e.getPoint());
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		System.out.println("Mouse up");
-		if (isDrawing) {
+		if (isDrawing) {			
+			isDrawing = false;
 			document.handleMouseUp(e.getPoint());
 			repaint();
-			isDrawing = false;
 		}
 	}
 
@@ -69,7 +68,15 @@ public class DrawingPanel extends JPanel implements MouseListener, MouseMotionLi
 	public void mouseDragged(MouseEvent e) {
 		if (isDrawing) {
 			Graphics2D g = (Graphics2D)getGraphics();
-			
+			DrawingShape shape = document.getCurrentShape();
+			if (shape != null) {		
+				g.setXORMode(getBackground());
+				shape.draw(g);
+				document.handleMouseMove(e.getPoint());
+				shape = document.getCurrentShape();
+				shape.draw(g);
+			}
+			g.dispose();
 		}
 	}
 

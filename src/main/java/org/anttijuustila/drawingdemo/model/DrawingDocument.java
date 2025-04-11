@@ -10,74 +10,80 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class DrawingDocument {
 	
 	enum ToolType {
-		SELECTION,
-		POINT,
 		LINE,
 		RECTANGLE,
 		ELLIPSE,
 	}
+	final ToolType [] tools = { ToolType.LINE, ToolType.RECTANGLE, ToolType.ELLIPSE };
+	final Color [] randomColors = { Color.BLACK, Color.BLUE, Color.RED, Color.GREEN, Color.ORANGE };
+	final int [] randomLineWidths = { 1, 2, 3, 4, 5, 6 };
 
 	private List<DrawingShape> shapes = new ArrayList<>();
-	private Shape selectedShape = null;
 	private ToolType currentTool = ToolType.LINE;
 
 	private int currentLineWidth = 1;
 	private Color currentColor = Color.BLACK;
 	private Color currentFillColor = null;
 
-	private Point2D.Float start = null;
-	private Point2D.Float end = null;
+	private Point2D.Float origin = null;
+	private Point2D.Float firstPoint = null;
+	private Point2D.Float secondPoint = null;
 
 	public List<DrawingShape> getShapes() {
 		return shapes;
 	}
 
+	public DrawingShape getCurrentShape() {
+		return currentShape;
+	}
+
 	private DrawingShape currentShape = null;
 	
 	public void handleMouseDown(final Point point) {
-		start = new Point2D.Float(point.x, point.y);
+		firstPoint = new Point2D.Float(point.x, point.y);
+		origin = firstPoint;
+		secondPoint = new Point2D.Float(point.x, point.y);
+		currentShape = createShape();
+	}
+
+	public void handleMouseMove(final Point point) {
+		secondPoint = new Point2D.Float(point.x, point.y);
+		currentShape = createShape();
 	}
 
 	public void handleMouseUp(final Point point) {
-		end = new Point2D.Float(point.x, point.y);
-		if (end.x < start.x) {
-			float tmp = start.x;
-			start.x = end.x;
-			end.x = tmp;
-		}
-		if (end.y < start.y) {
-			float tmp = start.y;
-			start.y = end.y;
-			end.y = tmp;
-		}
-		selectedShape = null;
-		for (final DrawingShape shape : shapes) {
-			if (shape.contains(point)) {
-				selectedShape = shape;
-				break;
-			}
-		}
-		if (selectedShape == null) {
-			addShape(createShape());
-		}
-		start = null;
-		end = null;
+		secondPoint = new Point2D.Float(point.x, point.y);
+		// if (currentTool != ToolType.LINE) {
+		// 	normalizePoints();
+		// }
+		addShape(createShape());
+		currentShape = null;
+		firstPoint = null;
+		secondPoint = null;
+		origin = null;
+		randomizeDrawing();
+	}
+
+	private void randomizeDrawing() {
+		currentTool = tools[ThreadLocalRandom.current().nextInt(tools.length)];
+		currentLineWidth = randomLineWidths[ThreadLocalRandom.current().nextInt(randomLineWidths.length)];
+		currentColor = randomColors[ThreadLocalRandom.current().nextInt(randomColors.length)];
+		currentFillColor = randomColors[ThreadLocalRandom.current().nextInt(randomColors.length)];
 	}
 
 	private void addShape(final DrawingShape shape) {
-		shapes.add(0, shape);
+		shapes.add(shape);
 	}
 
 	public DrawingShape createShape() {
-		if (start == null || end == null) {
+		if (firstPoint == null || secondPoint == null) {
 			return null;
 		}
-		// Normalize the coordinates so that start is always
-		// the upper left coordinate.
 		Shape shape = shapeFromToolType();
 		if (shape != null) {
 			DrawingShape newShape = new DrawingShape(shape, new BasicStroke(currentLineWidth), currentColor, currentFillColor);
@@ -87,19 +93,29 @@ public class DrawingDocument {
 	}
 
 	private Shape shapeFromToolType() {
+		normalizePoints();
 		switch (currentTool) {
-			case SELECTION:
-				return null;
-			case POINT:
-				return new Ellipse2D.Float(start.x, start.y, currentLineWidth, currentLineWidth);
 			case ELLIPSE:
-				return new Ellipse2D.Float(start.x, start.y, end.x-start.x, end.y-start.y);
+				return new Ellipse2D.Float(firstPoint.x, firstPoint.y, Math.abs(secondPoint.x-firstPoint.x), Math.abs(secondPoint.y-firstPoint.y));
 			case LINE:
-				return new Line2D.Float(start.x, start.y, end.x, end.y);				
+				return new Line2D.Float(firstPoint.x, firstPoint.y, secondPoint.x, secondPoint.y);				
 			case RECTANGLE:
-				return new Rectangle2D.Float(start.x, start.y, end.x-start.x, end.y-start.y);
+				return new Rectangle2D.Float(firstPoint.x, firstPoint.y, Math.abs(secondPoint.x-firstPoint.x), Math.abs(secondPoint.y-firstPoint.y));
+			default:
+				return null;
 		}
-		return null;
+	}
+
+	private void normalizePoints() {
+		if (currentTool != ToolType.LINE && (secondPoint.x < origin.x || secondPoint.y < origin.y)) {
+			if (secondPoint.x < origin.x && secondPoint.y < origin.y) {
+				firstPoint = secondPoint;
+				secondPoint = origin;
+			} else {
+				firstPoint = new Point2D.Float(Math.min(origin.x, secondPoint.x), Math.min(origin.y, secondPoint.y));
+				secondPoint = new Point2D.Float(Math.max(origin.x, secondPoint.x), Math.max(origin.y, secondPoint.y));
+			}
+		}
 	}
 
 }

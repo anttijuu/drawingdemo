@@ -18,6 +18,22 @@ public class DrawingShape implements Shape {
 	private Color lineColor = Color.BLACK;
 	private Color fillColor = null;
 
+	public Shape getShape() {
+		return shape;
+	}
+
+	public Stroke getStroke() {
+		return stroke;
+	}
+
+	public Color getLineColor() {
+		return lineColor;
+	}
+
+	public Color getFillColor() {
+		return fillColor;
+	}
+
 	public DrawingShape(
 		final Shape shape, 
 		final Stroke stroke, 
@@ -33,14 +49,13 @@ public class DrawingShape implements Shape {
 	public void draw(Graphics2D g) {
 		Stroke oldStroke = g.getStroke();
 		Color oldColor = g.getColor();
-		g.setStroke(stroke);
 		if (fillColor != null) {
 			g.setColor(fillColor);
 			g.fill(shape);
-		} else {
-			g.setColor(lineColor);
-			g.draw(shape);
 		}
+		g.setStroke(stroke);
+		g.setColor(lineColor);
+		g.draw(shape);
 		g.setColor(oldColor);
 		g.setStroke(oldStroke);
 	}
