@@ -1,22 +1,22 @@
 # Drawing App Demo
 
-> Demo on tarkoitettu TOL:n Ohjelmointi 4 -kurssin demoksi.
+> Piirrossovellus on tarkoitettu TOL:n Ohjelmointi 4 -kurssin demoksi.
 
 Tässä demossa esitellään *hyvin* lyhyesti ja askeettisesti miten Javalla Swingissä:
 
 1. view -luokassa (`DrawingPanel`) käsitellään hiiritapahtumia (mouse down, mouse up, mouse drag),
-2. view -luokka kertoo hiiritapahtumista  model -oliolle (`DrawingDocument`), jossa luodaan hiiritapahtumien perustella piirros-olioita (`DrawingShape`) ja tallennetaan dokumenttiolion sisältämään listaan, sekä
+2. view -luokka kertoo hiiritapahtumista  model -oliolle (`DrawingDocument`), jossa luodaan hiiritapahtumien perustella piirros-olioita (`DrawingShape`) jotka jemmataan dokumenttiolion sisältämään listaan, sekä
 3. päivitetään view -luokassa tilanne hakemalla dokumentista piirrosolioita piirrettäväksi näytölle.
 
-Älä siis katso tätä esimerkkinä siitä miten Java Swing -sovellus tehdään, miten layoutit ja ulkoasu toimii ja saadaan siistiksi. Keskity siis vain siihen miten hiiritapahtumia käsitellään, ja niiden perusteella saadaan jotain graafista aikaiseksi.
+Älä siis katso tätä esimerkkinä siitä miten Java Swing -sovellus tehdään, miten layoutit ja ulkoasu toimii ja saadaan siistiksi. Keskity vain siihen miten hiiritapahtumia käsitellään, ja niiden perusteella saadaan jotain graafista aikaiseksi.
 
 ## Miten demo toimii?
 
-Suorita ohjelma vaikkapa VS Codesta, ja ala piirtämään ikkunan valkoisella alueella, painamalla hiiren painike alas, raahaamalla hiirtä ja nostamalla painike ylös.
+Suorita ohjelma vaikkapa VS Codesta, ja ala piirtämään ikkunan valkoisella alueella, painamalla hiiren (vasen) painike alas, raahaamalla hiirtä ja nostamalla painike ylös.
 
 Ohjelma vaihtaa satunnaisesti piirrettävää muotoa (viiva, ellipsi, laatikko), viivan paksuutta, väriä sekä täyttöväriä.
 
-Esimerkiksi voit piirtää tällaisia abstrakteja teoksia:
+Esimerkiksi, voit piirtää sovelluksella tällaisia abstrakteja teoksia:
 
 ![Teoskynnys tuskin ylittyy](screenshot.png)
 
@@ -47,6 +47,6 @@ Muita demossa käytettyjä luokkia:
 
 ## Demon teki
 
-* Antti Juustila, lehtori
-* INTERACT Research Group
+* (c) Antti Juustila 2025
+* Lehtori, INTERACT Research Group
 * Oulun yliopisto
