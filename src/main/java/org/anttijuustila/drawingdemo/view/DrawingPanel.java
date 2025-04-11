@@ -68,11 +68,15 @@ public class DrawingPanel extends JPanel implements MouseListener, MouseMotionLi
 		if (isDrawing) {
 			Graphics2D g = (Graphics2D)getGraphics();
 			DrawingShape shape = document.getCurrentShape();
-			if (shape != null) {		
+			if (shape != null) {
+				// First draw "away" the "old" shape without this new move event,
+				// using XOR mode...
 				g.setXORMode(getBackground());
 				shape.draw(g);
+				// Then update the shape with this new point
 				document.handleMouseMove(e.getPoint());
 				shape = document.getCurrentShape();
+				// and then again draw the updated shape.
 				shape.draw(g);
 			}
 			g.dispose();

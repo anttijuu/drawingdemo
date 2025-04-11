@@ -34,12 +34,12 @@ public class DrawingShape {
 		final Stroke stroke, 
 		final Color lineColor, 
 		final Color fillColor
-		) {
-			this.shape = shape;
-			this.stroke = stroke;
-			this.lineColor = lineColor;
-			this.fillColor = fillColor;
-		}
+	) {
+		this.shape = shape;
+		this.stroke = stroke;
+		this.lineColor = lineColor;
+		this.fillColor = fillColor;
+	}
 
 	public void draw(Graphics2D g) {
 		Stroke oldStroke = g.getStroke();

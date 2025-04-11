@@ -58,9 +58,6 @@ public class DrawingDocument {
 
 	public void handleMouseUp(final Point point) {
 		secondPoint = new Point2D.Float(point.x, point.y);
-		// if (currentTool != ToolType.LINE) {
-		// 	normalizePoints();
-		// }
 		addShape(createShape());
 		currentShape = null;
 		firstPoint = null;
@@ -93,6 +90,8 @@ public class DrawingDocument {
 	}
 
 	private Shape shapeFromToolType() {
+		// Normalizes the points so that firstPoint is always to up and left of
+		// the second point, otherwise the drawing is not correctly done.
 		normalizePoints();
 		switch (currentTool) {
 			case ELLIPSE:
