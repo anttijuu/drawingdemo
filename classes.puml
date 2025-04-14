@@ -15,8 +15,12 @@ package org.anttijuustila.drawingdemo {
 
 	package controller {
 		class DrawingDocument <<subject>>  {
+			- currentlySelectedIndex : int 
 			+ addObserver(observer: DocumentObserver)
 			+ removeObserver(observer: DocumentObserver)
+			+ handleMouseDown(point : Point)
+			+ handleMouseMove(point : Point) 
+			+ handleMouseUp(point : Point)
 			+ createShape() : DrawingShape
 			+ getShapes() : List<DrawingShape>
 			+ setSelectedShape(whichShape : int)
