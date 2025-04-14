@@ -10,19 +10,22 @@ import java.awt.event.MouseMotionListener;
 
 import javax.swing.JPanel;
 
-import org.anttijuustila.drawingdemo.model.DrawingDocument;
+import org.anttijuustila.drawingdemo.controller.DocumentObserver;
+import org.anttijuustila.drawingdemo.controller.DrawingDocument;
 import org.anttijuustila.drawingdemo.model.DrawingShape;
 
-public class DrawingPanel extends JPanel implements MouseListener, MouseMotionListener {
+public class DrawingPanel extends JPanel implements MouseListener, MouseMotionListener, DocumentObserver {
 
 	private DrawingDocument document;
 
 	private boolean isDrawing = false;
+	private int selectedElementIndex = -1;
 
 	public DrawingPanel(final DrawingDocument document) {
 		super();
 		setBackground(Color.WHITE);
 		this.document = document;
+		document.addObserver(this);
 		addMouseListener(this);
 		addMouseMotionListener(this);
 	}
@@ -31,8 +34,10 @@ public class DrawingPanel extends JPanel implements MouseListener, MouseMotionLi
 	public void paintComponent(Graphics g) {        
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g.create();
+		int index = 0;
 		for (final DrawingShape shape : document.getShapes()) {
-			shape.draw(g2);
+			shape.draw(g2, index == selectedElementIndex);
+			index++;
 		}
 	}
 	
@@ -67,17 +72,17 @@ public class DrawingPanel extends JPanel implements MouseListener, MouseMotionLi
 	public void mouseDragged(MouseEvent e) {
 		if (isDrawing) {
 			Graphics2D g = (Graphics2D)getGraphics();
-			DrawingShape shape = document.getCurrentShape();
+			DrawingShape shape = document.getCurrentlyDrawnShape();
 			if (shape != null) {
 				// First draw "away" the "old" shape without this new move event,
 				// using XOR mode...
 				g.setXORMode(getBackground());
-				shape.draw(g);
+				shape.draw(g, false);
 				// Then update the shape with this new point
 				document.handleMouseMove(e.getPoint());
-				shape = document.getCurrentShape();
+				shape = document.getCurrentlyDrawnShape();
 				// and then again draw the updated shape.
-				shape.draw(g);
+				shape.draw(g, false);
 			}
 			g.dispose();
 		}
@@ -95,6 +100,17 @@ public class DrawingPanel extends JPanel implements MouseListener, MouseMotionLi
 	@Override
 	public Dimension getMinimumSize() {
 		return new Dimension(800, 600);
+	}
+
+	@Override
+	public void documentChanged() {
+		repaint();
+	}
+
+	@Override
+	public void selectionChanged(int whichSelected) {
+		selectedElementIndex = whichSelected;
+		repaint();
 	}
 
 	

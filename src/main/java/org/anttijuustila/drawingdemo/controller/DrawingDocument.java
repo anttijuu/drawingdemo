@@ -1,4 +1,4 @@
-package org.anttijuustila.drawingdemo.model;
+package org.anttijuustila.drawingdemo.controller;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -11,6 +11,8 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+
+import org.anttijuustila.drawingdemo.model.DrawingShape;
 
 public class DrawingDocument {
 	
@@ -34,36 +36,70 @@ public class DrawingDocument {
 	private Point2D.Float firstPoint = null;
 	private Point2D.Float secondPoint = null;
 
+	private DrawingShape currentlyDrawnShape = null;
+	private int currentlySelectedIndex = -1;
+
+	private List<DocumentObserver> observers = new ArrayList<>();
+
+	public void addObserver(final DocumentObserver observer) {
+		if (!observers.contains(observer)) {
+			observers.add(observer);
+		}
+	}
+
+	public void removeObserver(final DocumentObserver observer) {
+		observers.remove(observer);
+	}
+
+	enum ChangeEvent {
+		CONTAINER_CHANGED,
+		SELECTION_CHANGED,
+	}
+
+	private void notifyObservers(ChangeEvent event, int parameter) {
+		switch (event) {
+			case CONTAINER_CHANGED:
+				for (final DocumentObserver observer : observers) {
+					observer.documentChanged();
+				}
+				break;
+			case SELECTION_CHANGED:
+				for (final DocumentObserver observer : observers) {
+					observer.selectionChanged(parameter);
+				}
+				break;
+		}
+	}
+
 	public List<DrawingShape> getShapes() {
 		return shapes;
 	}
 
-	public DrawingShape getCurrentShape() {
-		return currentShape;
+	public DrawingShape getCurrentlyDrawnShape() {
+		return currentlyDrawnShape;
 	}
-
-	private DrawingShape currentShape = null;
 	
 	public void handleMouseDown(final Point point) {
 		firstPoint = new Point2D.Float(point.x, point.y);
 		origin = firstPoint;
 		secondPoint = new Point2D.Float(point.x, point.y);
-		currentShape = createShape();
+		currentlyDrawnShape = createShape();
 	}
 
 	public void handleMouseMove(final Point point) {
 		secondPoint = new Point2D.Float(point.x, point.y);
-		currentShape = createShape();
+		currentlyDrawnShape = createShape();
 	}
 
 	public void handleMouseUp(final Point point) {
 		secondPoint = new Point2D.Float(point.x, point.y);
 		addShape(createShape());
-		currentShape = null;
+		currentlyDrawnShape = null;
 		firstPoint = null;
 		secondPoint = null;
 		origin = null;
 		randomizeDrawing();
+		notifyObservers(ChangeEvent.CONTAINER_CHANGED, shapes.size() - 1);
 	}
 
 	private void randomizeDrawing() {
@@ -115,6 +151,24 @@ public class DrawingDocument {
 				secondPoint = new Point2D.Float(Math.max(origin.x, secondPoint.x), Math.max(origin.y, secondPoint.y));
 			}
 		}
+	}
+
+	public int size() {
+		return shapes.size();
+	}
+
+	public DrawingShape get(int index) {
+		return shapes.get(index);
+	}
+
+	public void setSelectedShape(int whichSelected) {
+		currentlySelectedIndex = whichSelected;
+		notifyObservers(ChangeEvent.SELECTION_CHANGED, currentlySelectedIndex);
+	}
+
+	public void removeShape(int selectedIndex) {
+		shapes.remove(selectedIndex);
+		notifyObservers(ChangeEvent.CONTAINER_CHANGED, selectedIndex);
 	}
 
 }
