@@ -14,7 +14,7 @@ javax.swing.JFrame *--> org.anttijuustila.drawingdemo.view.ListPanel
 package org.anttijuustila.drawingdemo {
 
 	package controller {
-		class DrawingDocument {
+		class DrawingDocument <<subject>>  {
 			+ addObserver(observer: DocumentObserver)
 			+ removeObserver(observer: DocumentObserver)
 			+ createShape() : DrawingShape
@@ -35,7 +35,7 @@ package org.anttijuustila.drawingdemo {
 	}
 
 	package view {
-		class ListPanel {
+		class ListPanel <<observer>> {
 			- elementList : javax.swing.JList<DrawingShape>
 			+ valueChanged(e : ListSelectionEvent)
 			+ keyReleased(e : KeyEvent) 
@@ -43,7 +43,7 @@ package org.anttijuustila.drawingdemo {
 		ListPanel ..|> DocumentObserver
 		ListPanel ..> DrawingDocument
 		ListPanel ..|> javax.swing.JPanel
-		class DrawingPanel {
+		class DrawingPanel  <<observer>> {
 			+ paintComponent(g : Graphics)
 			+ mousePressed(e : MouseEvent)
 			+ mouseReleased(e : MouseEvent)
