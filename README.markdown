@@ -40,7 +40,7 @@ Voit piirtää sovelluksella tällaisia abstrakteja teoksia:
 
 ![Teoskynnys tuskin ylittyy](screenshot.png)
 
-Vasemmalla piirrosalue jolla hiiritapahtumat käsitellään. Oikealla lista, jolla voit valita (hiirellä tai nuolinäppäimillä) aktiivisen piirroselementin ja poistaa sen `ctrl-backspace` -näppäinoikotiellä. Listalla valittu piirtoelementti (vihreäreunainen oranssilla värillä täytetty nelikulmio) on piirrosalueella korostettu nurkistaan mustilla pienillä neliöillä, ns. tartuntakahvoilla. Statusnäkymä alhaalla näyttää tilannetietoa piirrosdokumentista, päivittäen tietoja sitä mukaa kun piirroselementtejä luodaan ja/tai poistetaan.
+Vasemmalla piirrosalue jolla hiiritapahtumat käsitellään. Oikealla lista, jolla voit valita (hiirellä tai nuolinäppäimillä) aktiivisen piirroselementin ja poistaa sen `ctrl-backspace` -näppäinoikotiellä. Listalla valittu piirtoelementti (mustareunainen vihreällä värillä täytetty ellipsi) on piirrosalueella reunoiltaan mustilla pienillä neliöillä, ns. tartuntakahvoilla (jotka eivät tosin toimi, niistä ei voi manipuloida piirroselementtiä). Statusnäkymä alhaalla näyttää tilannetietoa piirrosdokumentista, päivittäen tietoja sitä mukaa kun piirroselementtejä luodaan ja/tai poistetaan.
 
 ## Toteutuksen yksityiskohtia
 
