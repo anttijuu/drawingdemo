@@ -1,5 +1,6 @@
 package org.anttijuustila.drawingdemo;
 
+import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -7,11 +8,13 @@ import java.awt.Point;
 import java.awt.Toolkit;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import org.anttijuustila.drawingdemo.controller.DrawingDocument;
 import org.anttijuustila.drawingdemo.view.DrawingPanel;
 import org.anttijuustila.drawingdemo.view.ListPanel;
+import org.anttijuustila.drawingdemo.view.StatusPanel;
 
 /**
  * Hello world!
@@ -35,12 +38,17 @@ public class DrawingApp
         mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         
         Container rootPane = mainFrame.getContentPane();
-        rootPane.setLayout(new GridLayout(1,2));
+        rootPane.setLayout(new BorderLayout());
+
+        JPanel contentPanel = new JPanel(new GridLayout(1, 2));
         DrawingPanel drawingPanel = new DrawingPanel(document);
-        rootPane.add(drawingPanel, 0,0);
+        contentPanel.add(drawingPanel, 0,0);
 
         ListPanel listPanel = new ListPanel(document);
-        rootPane.add(listPanel, 0, 1);
+        contentPanel.add(listPanel, 0, 1);
+        rootPane.add(contentPanel, BorderLayout.CENTER);
+
+        rootPane.add(new StatusPanel(document), BorderLayout.SOUTH);
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 

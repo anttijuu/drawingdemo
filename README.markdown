@@ -8,6 +8,7 @@ Tässä demossa esitellään lyhyesti ja askeettisesti miten Javalla Swingissä:
 2. view -luokka kertoo hiiritapahtumista  controller -oliolle (`DrawingDocument`), jossa luodaan hiiritapahtumien perustella piirros-olioita (`DrawingShape`) jotka jemmataan dokumenttiolion sisältämään listaan (model), sekä
 3. päivitetään view -luokassa tilanne hakemalla dokumentista piirrosolioita piirrettäväksi näytölle.
 4. toinen view -luokka (`ListPanel`) näyttää piirroselementtien tiedot yksinkertaisella listalla. Listan avulla voidaan valita piirroselementti sekä poistaa niitä.
+5. kolmas view -luokka (`Statuspanel`) näyttää montako erilaista piirroselementtiä dokumentissa tällä hetkellä on.
 
 Sovellus noudattaa siis [Model-View-Controller](https://fi.wikipedia.org/wiki/MVC-arkkitehtuuri) -arkkitehtuuria, jossa:
 
@@ -15,8 +16,9 @@ Sovellus noudattaa siis [Model-View-Controller](https://fi.wikipedia.org/wiki/MV
 * **Controller**, joka kontrolloi sovelluksen logiikkaa, on `DrawingDocument` -luokka, sekä
 * useampia näkymiä (**View**) jotka näyttävät controllerin avulla mallin tilaa eri tavoin näytöllä:
   * `DrawingPanel` näyttää piirroselementit graafisina elementteinä, ja
-  * `ListPanel` näyttää piirroselementit tekstinä listalla, sekä
-  * tarjoavat käyttäjälle tapoja muuttaa controllerin avulla mallin tilaa (lisätä ja poistaa piirroselementtejä).
+  * `ListPanel` näyttää piirroselementit tekstinä listalla,
+  * `StatusPanel` näyttää "tilastoja" dokumentista, sekä
+  * joista kaksi ensin mainittua tarjoavat käyttäjälle tapoja muuttaa controllerin avulla mallin tilaa (lisätä ja poistaa piirroselementtejä).
 
 `DrawingDocument`ja näkymät toteuttavat myös [Observer](https://en.wikipedia.org/wiki/Observer_pattern) -suunnittelumallin (*design pattern*). Dokumentti ilmoittaa muutoksista tilassaan tarkkailijoilleen (näkymät). Näkymät taas tarjoavat käyttäjälle tapoja muuttaa mallin tilaa, siten että muutkin näkymät saavat ilmoituksia mallin tilamuutoksista.
 
@@ -36,7 +38,7 @@ Voit piirtää sovelluksella tällaisia abstrakteja teoksia:
 
 ![Teoskynnys tuskin ylittyy](screenshot.png)
 
-Vasemmalla piirrosalue jolla hiiritapahtumat käsitellään. Oikealla lista, jolla voit valita (hiirellä tai nuolinäppäimillä) aktiivisen piirroselementin ja poistaa sen `ctrl-backspace` -näppäinoikotiellä. Listalla valittu piirtoelementti (vihreäreunainen oranssilla värillä täytetty nelikulmio) on piirrosalueella korostettu nurkistaan mustilla pienillä neliöillä, ns. tartuntakahvoilla.
+Vasemmalla piirrosalue jolla hiiritapahtumat käsitellään. Oikealla lista, jolla voit valita (hiirellä tai nuolinäppäimillä) aktiivisen piirroselementin ja poistaa sen `ctrl-backspace` -näppäinoikotiellä. Listalla valittu piirtoelementti (vihreäreunainen oranssilla värillä täytetty nelikulmio) on piirrosalueella korostettu nurkistaan mustilla pienillä neliöillä, ns. tartuntakahvoilla. Statusnäkymä alhaalla näyttää tilannetietoa piirrosdokumentista, päivittäen tietoja sitä mukaa kun piirroselementtejä luodaan ja/tai poistetaan.
 
 ## Toteutuksen yksityiskohtia
 

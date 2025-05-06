@@ -16,6 +16,12 @@ import org.anttijuustila.drawingdemo.model.DrawingShape;
 
 public class DrawingDocument {
 	
+	public class StatsRecord {
+		public int lineCount = 0;
+		public int rectangleCount = 0;
+		public int ellipseCount = 0;
+	}
+
 	enum ToolType {
 		LINE,
 		RECTANGLE,
@@ -26,6 +32,8 @@ public class DrawingDocument {
 	final int [] randomLineWidths = { 1, 2, 3, 4, 5, 6 };
 
 	private List<DrawingShape> shapes = new ArrayList<>();
+	private StatsRecord stats = new StatsRecord();
+
 	private ToolType currentTool = ToolType.LINE;
 
 	private int currentLineWidth = 1;
@@ -75,6 +83,10 @@ public class DrawingDocument {
 		return shapes;
 	}
 
+	public StatsRecord getStats() {
+		return stats;
+	}
+
 	public DrawingShape getCurrentlyDrawnShape() {
 		return currentlyDrawnShape;
 	}
@@ -111,6 +123,19 @@ public class DrawingDocument {
 
 	private void addShape(final DrawingShape shape) {
 		shapes.add(shape);
+		switch (currentTool) {
+			case ELLIPSE:
+				stats.ellipseCount++;
+				break;
+			case LINE:
+				stats.lineCount++;
+				break;
+			case RECTANGLE:
+				stats.rectangleCount++;
+				break;
+			default:
+				break;
+		}
 	}
 
 	public DrawingShape createShape() {
@@ -167,6 +192,15 @@ public class DrawingDocument {
 	}
 
 	public void removeShape(int selectedIndex) {
+		final DrawingShape toRemove = shapes.get(selectedIndex);
+		final Shape shape = toRemove.getShape();
+		if (shape instanceof Line2D) {
+			stats.lineCount--;
+		} else if (shape instanceof Ellipse2D) {
+			stats.ellipseCount--;
+		} else if (shape instanceof Rectangle2D) {
+			stats.rectangleCount--;
+		}
 		shapes.remove(selectedIndex);
 		notifyObservers(ChangeEvent.CONTAINER_CHANGED, selectedIndex);
 	}
