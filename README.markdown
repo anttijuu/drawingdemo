@@ -22,6 +22,8 @@ Sovellus noudattaa siis [Model-View-Controller](https://fi.wikipedia.org/wiki/MV
 
 `DrawingDocument`ja näkymät toteuttavat myös [Observer](https://en.wikipedia.org/wiki/Observer_pattern) -suunnittelumallin (*design pattern*). Dokumentti ilmoittaa muutoksista tilassaan tarkkailijoilleen (näkymät). Listanäkymän tapauksessa dokumentin tarkkailija on itse asiassa *sen list model*, eli luokka `DrawingElementListModel`. List model ilmoittaa suoraan `JList`-oliolle kun dokumentti muuttuu ja listan sisältö pitää päivittää.
 
+> Jos haluat nähdä vaihtoehdon Observer -suunnittelumallille, katso [MVCClock](https://github.com/anttijuu/mvcclock) demo, jossa toteutetaan samankaltainen toiminnallisuus mitä Observer tarjoaa, ns. *Publish-Subscribe* -mallilla.
+
 Näkymät taas tarjoavat käyttäjälle tapoja muuttaa mallin tilaa, siten että muutkin näkymät saavat ilmoituksia mallin tilamuutoksista.
 
 ## Miten demo toimii?
