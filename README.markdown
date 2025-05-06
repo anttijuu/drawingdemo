@@ -20,7 +20,9 @@ Sovellus noudattaa siis [Model-View-Controller](https://fi.wikipedia.org/wiki/MV
   * `StatusPanel` näyttää "tilastoja" dokumentista, sekä
   * joista kaksi ensin mainittua tarjoavat käyttäjälle tapoja muuttaa controllerin avulla mallin tilaa (lisätä ja poistaa piirroselementtejä).
 
-`DrawingDocument`ja näkymät toteuttavat myös [Observer](https://en.wikipedia.org/wiki/Observer_pattern) -suunnittelumallin (*design pattern*). Dokumentti ilmoittaa muutoksista tilassaan tarkkailijoilleen (näkymät). Näkymät taas tarjoavat käyttäjälle tapoja muuttaa mallin tilaa, siten että muutkin näkymät saavat ilmoituksia mallin tilamuutoksista.
+`DrawingDocument`ja näkymät toteuttavat myös [Observer](https://en.wikipedia.org/wiki/Observer_pattern) -suunnittelumallin (*design pattern*). Dokumentti ilmoittaa muutoksista tilassaan tarkkailijoilleen (näkymät). Listanäkymän tapauksessa dokumentin tarkkailija on itse asiassa *sen list model*, eli luokka `DrawingElementListModel`. List model ilmoittaa suoraan `JList`-oliolle kun dokumentti muuttuu ja listan sisältö pitää päivittää.
+
+Näkymät taas tarjoavat käyttäjälle tapoja muuttaa mallin tilaa, siten että muutkin näkymät saavat ilmoituksia mallin tilamuutoksista.
 
 ## Miten demo toimii?
 

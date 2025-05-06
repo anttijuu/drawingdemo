@@ -1,17 +1,17 @@
 @startuml
-skinparam groupInheritance 2
+skinparam groupInheritance 1
 top to bottom direction
 
-class DrawingApp {
-	+ {static} main(args : [String]) : void
-}
-
-DrawingApp *--> org.anttijuustila.drawingdemo.controller.DrawingDocument
-DrawingApp ..> javax.swing.JFrame
-javax.swing.JFrame *--> org.anttijuustila.drawingdemo.view.DrawingPanel
-javax.swing.JFrame *--> org.anttijuustila.drawingdemo.view.ListPanel
-
 package org.anttijuustila.drawingdemo {
+
+	class DrawingApp {
+		+ {static} main(args : [String]) : void
+	}
+
+	DrawingApp *--> controller.DrawingDocument : document
+	DrawingApp ..> view.ListPanel : creates
+	DrawingApp ..> view.DrawingPanel : creates
+	DrawingApp ..> view.StatusPanel : creates
 
 	package controller {
 		class DrawingDocument <<subject>>  {
@@ -30,8 +30,8 @@ package org.anttijuustila.drawingdemo {
 			+ documentChanged()
 			+ selectionChanged(selection : int)
 		}
-		DrawingDocument *--> DocumentObserver : observers
-		DrawingDocument *--> org.anttijuustila.drawingdemo.model.DrawingShape : shapes
+		DrawingDocument *--> "*" DocumentObserver : observers
+		DrawingDocument *--> "*" org.anttijuustila.drawingdemo.model.DrawingShape : shapes
 	}
 
 	package model {
@@ -39,14 +39,12 @@ package org.anttijuustila.drawingdemo {
 	}
 
 	package view {
-		class ListPanel <<observer>> {
+		class ListPanel {
 			- elementList : javax.swing.JList<DrawingShape>
 			+ valueChanged(e : ListSelectionEvent)
 			+ keyReleased(e : KeyEvent) 
 		}
-		ListPanel ..|> DocumentObserver
 		ListPanel ..> DrawingDocument
-		ListPanel ..|> javax.swing.JPanel
 		class DrawingPanel  <<observer>> {
 			+ paintComponent(g : Graphics)
 			+ mousePressed(e : MouseEvent)
@@ -54,12 +52,16 @@ package org.anttijuustila.drawingdemo {
 			+ mouseDragged(e : MouseEvent)
 		}
 		DrawingPanel ..|> DocumentObserver
-		DrawingPanel ..|> javax.swing.JPanel
 		DrawingPanel ..> DrawingDocument
-		class DrawingElementListModel
-		ListPanel *--> DrawingElementListModel
+		class DrawingElementListModel <<observer>>
+		ListPanel *--> DrawingElementListModel : has
 		DrawingElementListModel ..> org.anttijuustila.drawingdemo.controller.DrawingDocument
-		DrawingElementListModel --|> javax.swing.AbstractListModel
+		DrawingElementListModel ..|> DocumentObserver
+		class StatusPanel <<observer>> {
+			- statusLabel: JLabel
+		}
+		StatusPanel ..|> DocumentObserver
+		StatusPanel ..> DrawingDocument
 	}
 
 }

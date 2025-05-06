@@ -15,11 +15,10 @@ import javax.swing.event.ListDataListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.anttijuustila.drawingdemo.controller.DocumentObserver;
 import org.anttijuustila.drawingdemo.controller.DrawingDocument;
 import org.anttijuustila.drawingdemo.model.DrawingShape;
 
-public class ListPanel extends JPanel implements DocumentObserver, ListSelectionListener, ListDataListener, KeyListener {
+public class ListPanel extends JPanel implements ListSelectionListener, ListDataListener, KeyListener {
 
 	private JList<DrawingShape> elementList;
 	private DrawingDocument document;
@@ -38,24 +37,8 @@ public class ListPanel extends JPanel implements DocumentObserver, ListSelection
 	}
 
 	@Override
-	public void documentChanged() {
-		elementList.repaint();
-	}
-
-	private boolean selectionOriginatedFromHere = false;
-
-	@Override
-	public void selectionChanged(int whichSelected) {
-		if (!selectionOriginatedFromHere) {
-			elementList.setSelectedIndex(whichSelected);
-		}
-		selectionOriginatedFromHere = false;
-	}
-
-	@Override
 	public void valueChanged(ListSelectionEvent e) {
 		if (!e.getValueIsAdjusting()) {
-			selectionOriginatedFromHere = true;
 			document.setSelectedShape(elementList.getSelectedIndex());
 			requestFocusInWindow();
 		}
